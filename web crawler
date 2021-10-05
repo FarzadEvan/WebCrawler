@@ -1,0 +1,79 @@
+#importing the libraries
+import requests
+import pandas as pd
+from bs4 import BeautifulSoup
+import tkinter as tk
+import math
+from tqdm import tqdm
+
+
+root= tk.Tk()
+
+canvas1 = tk.Canvas(root, width = 400, height = 300)
+canvas1.pack()
+
+entry1 = tk.Entry (root) 
+canvas1.create_window(200, 140, window=entry1)
+
+def geturl ():  
+    url1 = entry1.get()
+    return url1
+    
+button1 = tk.Button(text='Start Crawling', command = geturl)
+canvas1.create_window(200, 180, window=button1)
+
+root.mainloop(
+
+
+
+
+
+def down_file():
+    file = requests.get(entry1.get(), stream = True)
+    
+    total_bit = int(file.headers.get("Content-Length", 0))
+    
+    scale_pow = math.floor(math.log(total_bit , 1024))
+    
+    total_size = (total_bit/math.pow(1024 , scale_pow))* math.pow(1000,scale_pow)
+    
+    t = tqdm(total = total_size, unit_scale = True, unit = 'B')
+    
+    with open("/Users/farzad/programing/downtest.zip", 'wb') as f:
+        for chunk in file.iter_content(1024):
+            
+            t.update(len(chunk)/ math.pow(1024, scale_pow) * math.pow(1000, scale_pow))
+            
+            f.write(chunk)
+            
+    t.close()
+    
+
+
+
+def crawling():
+    url = input("Url: ")
+    site2 = requests.get(url)
+    
+    soup = BeautifulSoup(site2.text, "html.parser")
+    
+    s = soup.find_all("div", {'class': 'content-container'},recursive = True )
+    
+    for i in range(len(s)):
+        
+        discription = [s[i].p.text for i in range(len(s))]
+        #discription1 = [discription]
+    
+    name = [s[i].h2.text for i in range(len(s))]
+    
+    add = [s[i].a['href']for i in range(len(s))]
+    
+    a = pd.DataFrame({
+        "lesson" : name,
+        'url address': add,
+        'discription' : discription
+    })
+    a.to_csv("/Users/farzad/programing/testcrawl.csv", encoding = 'utf-8')
+    
+
+crawling()
