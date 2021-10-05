@@ -22,6 +22,9 @@ def geturl ():
 button1 = tk.Button(text='Start Crawling', command = geturl)
 canvas1.create_window(200, 180, window=button1)
 
+button2 = tk.Button(text='Start Downloading', command = down_file)
+canvas1.create_window(200, 180, window=button2)
+
 root.mainloop(
 
 
