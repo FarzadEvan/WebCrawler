@@ -15,9 +15,6 @@ canvas1.pack()
 entry1 = tk.Entry (root) 
 canvas1.create_window(200, 140, window=entry1)
 
-def geturl ():  
-    url1 = entry1.get()
-    return url1
     
 def down_file():
     file = requests.get(entry1.get(), stream = True)
@@ -38,21 +35,13 @@ def down_file():
             f.write(chunk)
             
     t.close()
-    
-button1 = tk.Button(text='Start Crawling', command = geturl)
-canvas1.create_window(200, 180, window=button1)
-
-button2 = tk.Button(text='Start Downloading', command = down_file)
-canvas1.create_window(200, 100, window=button2)
-
-root.mainloop(
-
-
 
 
 def crawling():
-    url = input("Url: ")
-    site2 = requests.get(url)
+
+    #url = input("Url: ")
+
+    site2 = requests.get(entry1.get())
     
     soup = BeautifulSoup(site2.text, "html.parser")
     
@@ -73,6 +62,12 @@ def crawling():
         'discription' : discription
     })
     a.to_csv("/Users/farzad/programing/testcrawl.csv", encoding = 'utf-8')
-    
 
-crawling()
+    
+button1 = tk.Button(text='Start Crawling', command = crawling)
+canvas1.create_window(200, 180, window=button1)
+
+button2 = tk.Button(text='Start Downloading', command = down_file)
+canvas1.create_window(200, 100, window=button2)
+
+root.mainloop()
